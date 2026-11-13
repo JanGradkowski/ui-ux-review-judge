@@ -2,7 +2,7 @@
 
 Copy this to `.claude/ui-ux-review-judge.md` in the project and fill it in once the first loop's setup works. The next loop reads it first and skips the rediscovery. Keep secrets out of it: name the file that holds the test account, never the values.
 
-If the project's `.claude/` folder is committed, decide with the user whether these notes belong in the repo (useful to teammates) or should be ignored. Use a `.local.md` name if they should stay private.
+Decide with the user whether these notes belong in the repo, where they help teammates. If they should stay private, name the file `.claude/ui-ux-review-judge.local.md` instead, and make sure the project's `.gitignore` covers it. The skill reads either name.
 
 ---
 

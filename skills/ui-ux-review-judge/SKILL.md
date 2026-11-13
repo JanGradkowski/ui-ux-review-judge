@@ -22,7 +22,7 @@ Take the inputs from the request and the conversation. Ask only for what you can
   - every language the app ships.
 - **Constraints the judge must respect:** design-system references (the pages whose look is the standard), hardware limits, app-wide decisions.
 
-**Project notes.** If the project has `.claude/ui-ux-review-judge.md`, read it now. It holds that project's review server, database, sign-in, theme and language setup, its constraints and its deliberate design choices. If it doesn't exist, write one from `references/project-notes-template.md` once setup works, so the next loop starts in minutes rather than rediscovering it all.
+**Project notes.** Look in the project for `.claude/ui-ux-review-judge.md`, or `.claude/ui-ux-review-judge.local.md` for notes kept out of version control, and read whichever exists now. It holds that project's review server, database, sign-in, theme and language setup, its constraints and its deliberate design choices. If neither exists, write one from `references/project-notes-template.md` once setup works, so the next loop starts in minutes rather than rediscovering it all. Ask the user whether the notes should be committed. If not, use the `.local.md` name and make sure the project's `.gitignore` covers it.
 
 **Check that the judge's skill exists.** The judge needs the `design:design-critique` skill from Anthropic's `design` plugin. If that skill isn't in your skill list, stop and tell the user how to install it: `/plugin marketplace add anthropics/knowledge-work-plugins`, then `/plugin install design@knowledge-work-plugins`. Without it, rounds can't be verified, so no score would count.
 
@@ -168,13 +168,13 @@ Write it in plain prose with short lists:
    - tests and probes, and what was not run;
    - whether the review server is still running.
 
-Then add any lesson that would make the next loop cheaper to the project notes (`.claude/ui-ux-review-judge.md`), and save a memory note with the trajectory if you keep memory.
+Then add any lesson that would make the next loop cheaper to the project notes file, and save a memory note with the trajectory if you keep memory.
 
 ## Files
 
 - `references/judge-brief.md`: the judge brief template. Read it when you brief a round.
 - `references/scripts.md`: the config format and how to use each bundled script.
-- `references/project-notes-template.md`: the template for a project's `.claude/ui-ux-review-judge.md`.
+- `references/project-notes-template.md`: the template for a project's notes file (`.claude/ui-ux-review-judge.md` or `.claude/ui-ux-review-judge.local.md`).
 - `assets/review.config.example.json`: a starting config for the scripts.
 - `scripts/`:
   - `capture.cjs`, `collision-probe.cjs`, `tap-probe.cjs` and `sign-in.cjs`, which use Playwright from the project's `node_modules`;
