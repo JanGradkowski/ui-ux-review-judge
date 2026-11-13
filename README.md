@@ -38,9 +38,15 @@ flowchart LR
 4. **Verification.** `verify_judge.py` reads the judge's transcript. A round doesn't count unless `design:design-critique` was invoked before the first screenshot was opened. Writes, sign-ins, form submissions and non-GET requests are flagged.
 5. **Fixes with evidence.** Claude reproduces each finding with a measurement before fixing it, and can try CSS with `--css` before touching a file. When two judges contradict each other, it picks one convention and records why, instead of flip-flopping.
 
+The probes on the repo's own test page, which has six planted problems:
+
+<p align="center"><img src="docs/probe-example.png" width="900" alt="The test page at phone width with six problems outlined and numbered: a badge drawn over a heading, a pill whose text spills out, a code line wider than its card, a button covered by an invisible layer, a 16-pixel close button, and a paragraph that makes the page scroll sideways. Beside it, the collision and tap probes' real output lists each one."></p>
+
 ## What to expect
 
 On a real signed-in dashboard, ten verified rounds went:
+
+<p align="center"><img src="docs/score-by-round.svg" width="760" alt="Line chart of the judge's score by round for a signed-in dashboard page: 5.5, 7.3, 7.3, 8.2, 7.0, 8.2, 8.3, 8.0, 8.3, 8.0, against a dashed target line at 9. Round 5's dip to 7.0 is labelled as a regression from the fixes."></p>
 
 ```text
 5.5 → 7.3 → 7.3 → 8.2 → 7.0 → 8.2 → 8.3 → 8.0 → 8.3 → 8.0
