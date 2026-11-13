@@ -1,6 +1,6 @@
 {
   "name": "ui-ux-review-judge",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "A Claude Code skill: an honest, read-only judge scores your page out of 10 while Claude fixes it, until 9/10.",
   "license": "MIT",

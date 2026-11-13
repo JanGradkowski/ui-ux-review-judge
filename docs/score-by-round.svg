@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 312" width="760" height="312" role="img" aria-labelledby="title desc">
+  <title id="title">Judge score by round</title>
+  <desc id="desc">A dashboard page over ten verified judge rounds scored 5.5, 7.3, 7.3, 8.2, 7.0, 8.2, 8.3, 8.0, 8.3 and 8.0 out of 10, against a target of 9. The dip to 7.0 in round 5 was a regression caused by the fixes.</desc>
+  <style>
+    .surface { fill: #fcfcfb; stroke: rgba(11, 11, 11, 0.10); }
+    .title { fill: #0b0b0b; font: 600 15px system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .subtitle { fill: #52514e; font: 13px system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .tick { fill: #898781; font: 12px system-ui, -apple-system, "Segoe UI", sans-serif; font-variant-numeric: tabular-nums; }
+    .grid { stroke: #e1e0d9; stroke-width: 1; }
+    .baseline { stroke: #c3c2b7; stroke-width: 1; }
+    .target { stroke: #898781; stroke-width: 1.5; stroke-dasharray: 5 4; }
+    .series { stroke: #2a78d6; stroke-width: 2; fill: none; stroke-linejoin: round; stroke-linecap: round; }
+    .marker { fill: #2a78d6; stroke: #fcfcfb; stroke-width: 2; }
+    .value { fill: #0b0b0b; font: 600 13px system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .note { fill: #52514e; font: 12px system-ui, -apple-system, "Segoe UI", sans-serif; }
+    @media (prefers-color-scheme: dark) {
+      .surface { fill: #1a1a19; stroke: rgba(255, 255, 255, 0.10); }
+      .title, .value { fill: #f0efec; }
+      .subtitle, .note { fill: #c3c2b7; }
+      .grid { stroke: #2c2c2a; }
+      .baseline { stroke: #383835; }
+      .series { stroke: #3987e5; }
+      .marker { fill: #3987e5; stroke: #1a1a19; }
+    }
+  </style>
+
+  <rect class="surface" x="0.5" y="0.5" width="759" height="311" rx="10"/>
+  <text class="title" x="24" y="32">Judge score by round</text>
+  <text class="subtitle" x="24" y="52">A signed-in dashboard page, ten verified rounds, score out of 10</text>
+
+  <!-- y: score 5 → y 262, score 10 → y 82 (36px per point). x: round 1 → 72, round 10 → 690. -->
+  <g class="tick" text-anchor="end">
+    <text x="58" y="266">5</text>
+    <text x="58" y="230">6</text>
+    <text x="58" y="194">7</text>
+    <text x="58" y="158">8</text>
+    <text x="58" y="122">9</text>
+    <text x="58" y="86">10</text>
+  </g>
+  <g>
+    <line class="grid" x1="66" x2="736" y1="226" y2="226"/>
+    <line class="grid" x1="66" x2="736" y1="190" y2="190"/>
+    <line class="grid" x1="66" x2="736" y1="154" y2="154"/>
+    <line class="grid" x1="66" x2="736" y1="82" y2="82"/>
+    <line class="baseline" x1="66" x2="736" y1="262" y2="262"/>
+  </g>
+
+  <line class="target" x1="66" x2="736" y1="118" y2="118"/>
+  <text class="note" x="736" y="110" text-anchor="end">target 9.0</text>
+
+  <g class="tick" text-anchor="middle">
+    <text x="72" y="282">1</text>
+    <text x="140.7" y="282">2</text>
+    <text x="209.3" y="282">3</text>
+    <text x="278" y="282">4</text>
+    <text x="346.7" y="282">5</text>
+    <text x="415.3" y="282">6</text>
+    <text x="484" y="282">7</text>
+    <text x="552.7" y="282">8</text>
+    <text x="621.3" y="282">9</text>
+    <text x="690" y="282">10</text>
+    <text x="381" y="302">judge round</text>
+  </g>
+
+  <!-- 5.5, 7.3, 7.3, 8.2, 7.0, 8.2, 8.3, 8.0, 8.3, 8.0 -->
+  <polyline class="series" points="72,244 140.7,179.2 209.3,179.2 278,146.8 346.7,190 415.3,146.8 484,143.2 552.7,154 621.3,143.2 690,154"/>
+  <g>
+    <circle class="marker" cx="72" cy="244" r="5"/>
+    <circle class="marker" cx="140.7" cy="179.2" r="5"/>
+    <circle class="marker" cx="209.3" cy="179.2" r="5"/>
+    <circle class="marker" cx="278" cy="146.8" r="5"/>
+    <circle class="marker" cx="346.7" cy="190" r="5"/>
+    <circle class="marker" cx="415.3" cy="146.8" r="5"/>
+    <circle class="marker" cx="484" cy="143.2" r="5"/>
+    <circle class="marker" cx="552.7" cy="154" r="5"/>
+    <circle class="marker" cx="621.3" cy="143.2" r="5"/>
+    <circle class="marker" cx="690" cy="154" r="5"/>
+  </g>
+
+  <!-- Selective labels: the start, the dip, the best and the last round. -->
+  <text class="value" x="84" y="248">5.5</text>
+  <text class="value" x="346.7" y="214" text-anchor="middle">7.0</text>
+  <text class="note" x="346.7" y="230" text-anchor="middle">a regression from the fixes</text>
+  <text class="value" x="484" y="132" text-anchor="middle">8.3</text>
+  <text class="value" x="690" y="176" text-anchor="middle">8.0</text>
+</svg>
