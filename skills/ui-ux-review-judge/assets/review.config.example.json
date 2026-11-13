@@ -1,0 +1,26 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "projectDir": "/path/to/your/project",
+  "pages": ["/dashboard"],
+  "storageState": "state.json",
+  "browser": { "engine": "chromium" },
+  "languages": ["en", "de"],
+  "language": { "method": "header" },
+  "themes": ["light", "dark"],
+  "theme": { "method": "colorScheme" },
+  "loginPattern": "/login",
+  "waitFor": "main",
+  "collisionScopes": ["main li", "main .card", "header"],
+  "tapScope": "main",
+  "signIn": {
+    "path": "/login",
+    "credentials": "/path/to/your/project/.claude/test-account.local.properties",
+    "fields": { "input[type=email]": "test.email", "input[type=password]": "test.password" }
+  },
+  "shots": [
+    { "name": "dashboard", "path": "/dashboard" },
+    { "name": "dashboard-menu-open", "path": "/dashboard", "steps": [{ "click": "summary.menu" }] },
+    { "name": "dashboard-skip-link", "path": "/dashboard", "steps": [{ "press": "Tab" }] },
+    { "name": "dashboard-keyboard-focus", "path": "/dashboard", "viewports": ["desktop"], "steps": [{ "press": "Tab", "times": 14 }] }
+  ]
+}

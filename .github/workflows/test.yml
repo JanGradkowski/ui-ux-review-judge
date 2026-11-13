@@ -1,0 +1,37 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check script syntax and manifests
+        run: |
+          for f in skills/ui-ux-review-judge/scripts/*.cjs; do node --check "$f"; done
+          python -m py_compile skills/ui-ux-review-judge/scripts/verify_judge.py
+          for f in .claude-plugin/*.json skills/ui-ux-review-judge/assets/*.json; do node -e "JSON.parse(require('fs').readFileSync('$f', 'utf8'))" || { echo "invalid JSON: $f"; exit 1; }; done
+
+      - name: Install Playwright
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Test the scripts
+        run: npm test

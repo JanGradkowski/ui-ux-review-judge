@@ -1,0 +1,8 @@
+node_modules/
+test/.out/
+
+# Things the loop writes that must never be published
+state.json
+*.local.*
+review.config.json
+judge-log.md

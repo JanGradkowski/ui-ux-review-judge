@@ -1,0 +1,17 @@
+{
+  "name": "ui-ux-review-judge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A Claude Code skill: an honest, read-only judge scores your page out of 10 while Claude fixes it, until 9/10.",
+  "license": "MIT",
+  "repository": "github:JanGradkowski/ui-ux-review-judge",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.cjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  }
+}

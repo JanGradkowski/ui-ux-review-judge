@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Broken dashboard</title>
+  <link rel="stylesheet" href="/base.css">
+  <link rel="stylesheet" href="/broken.css">
+</head>
+<body>
+  <header>
+    <a href="#main">Skip to content</a>
+    <nav><a href="/broken.html">Home</a> <a href="/broken.html#settings">Settings</a></nav>
+  </header>
+  <main id="main">
+    <h1>Dashboard</h1>
+    <ul class="cards">
+      <!-- 1. A badge drawn on top of the heading. -->
+      <li class="card"><h2>Apple Inc.</h2><span class="badge">NEW SIGNAL</span><p>Latest close 342.37 USD.</p><button type="button">Open</button></li>
+      <!-- 2. A fixed-height pill whose text wrapped and spills out. -->
+      <li class="card"><h2>Amgen Inc.</h2><span class="pill fixed">35 unread items</span><p>Latest close 460.42 USD.</p><button type="button">Open</button></li>
+      <!-- 3. A code block wider than its card. -->
+      <li class="card"><h2>Microsoft Corp.</h2><code class="too-wide">MSFT,2026-11-13,512.10,513.80,509.92</code><button type="button">Open</button></li>
+      <!-- 4. A button covered by an invisible overlay, and 5. a 16px close button. -->
+      <li class="card"><h2>Nvidia Corp.</h2><div class="covered"><button type="button">Covered</button><div class="overlay"></div></div><button type="button" class="tiny">×</button></li>
+    </ul>
+    <!-- 6. Something wide enough to make the whole page scroll sideways. -->
+    <p class="page-wide">This paragraph is far wider than any phone.</p>
+  </main>
+</body>
+</html>

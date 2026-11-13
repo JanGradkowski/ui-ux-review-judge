@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "ui-ux-review-judge",
+  "description": "An honest, judged UI/UX review loop for Claude Code.",
+  "owner": {
+    "name": "Jan Gradkowski",
+    "url": "https://github.com/JanGradkowski"
+  },
+  "plugins": [
+    {
+      "name": "ui-ux-review-judge",
+      "description": "An independent, read-only judge scores your page out of 10 with design:design-critique; Claude fixes what it finds and a fresh judge rates again, until 9/10 or the budget runs out.",
+      "source": "./",
+      "category": "design",
+      "homepage": "https://github.com/JanGradkowski/ui-ux-review-judge"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+/* Planted problems. Every rule here should be caught by a probe. */
+.badge { position: absolute; top: 12px; left: 12px; font-weight: 700; }
+.pill.fixed { height: 14px; width: 44px; white-space: normal; line-height: 14px; }
+.too-wide { display: block; width: 520px; white-space: nowrap; }
+.covered { position: relative; display: inline-block; }
+.overlay { position: absolute; inset: 0; }
+button.tiny { width: 16px; height: 16px; min-height: 0; padding: 0; }
+.page-wide { width: 2000px; }
