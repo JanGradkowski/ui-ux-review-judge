@@ -36,6 +36,7 @@ These rules keep the loop safe and the score meaningful.
   - send POST, PUT, PATCH or DELETE requests;
   - edit project files.
   It writes only to its own scratch folder.
+- **The scripts are read-only by construction.** Pages load and read normally, but every request other than GET, HEAD or OPTIONS is answered locally and never reaches the server. A page that marks an item read when it opens, or sends an analytics beacon, changes nothing. Each script ends by listing what it blocked. The judge's own probe scripts must block the same way; the brief gives the line to use.
 - **Review against a review database, never a shared one.** Use a seeded copy or a separate schema, so neither you nor the judge can disturb anyone's data.
 - **Use a fresh judge every round.** Never continue the previous judge with SendMessage. Don't tell the new judge the earlier scores or the target you're hoping for. Give it the previous findings to verify, and the deliberate choices with their reasons. This keeps scores from anchoring.
 - **Report the judge's score exactly as given.** Don't coach it, argue with it, or edit its output.

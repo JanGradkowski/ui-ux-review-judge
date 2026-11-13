@@ -6,7 +6,7 @@
 // Text cut short with an ellipsis is listed as a note, since it is often deliberate.
 // usage: node collision-probe.cjs <review.config.json> [--pages /a,/b] [--langs en,pl] [--widths 360,1440] [--height 900]
 //        [--css "<rule>" | --css trial.css]   (try a fix without editing files or restarting the server)
-const { loadConfig, launch, openContext, load, options, list, trialCss } = require('./lib.cjs');
+const { loadConfig, launch, openContext, load, options, list, trialCss, blockedSummary } = require('./lib.cjs');
 
 const args = options(process.argv.slice(2));
 const config = loadConfig(args._[0]);
@@ -81,6 +81,7 @@ const height = Number(args.height || 900);
     await context.close();
   }
   await browser.close();
+  console.log(blockedSummary());
   console.log(problems ? `${problems} problems` : 'no problems');
   process.exitCode = problems ? 2 : 0;
 })().catch(error => { console.error(error.message || error); process.exit(1); });

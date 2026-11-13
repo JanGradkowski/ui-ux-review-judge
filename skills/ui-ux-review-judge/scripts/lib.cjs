@@ -39,6 +39,7 @@ function loadConfig(file) {
     tapSelector: raw.tapSelector || 'a[href], button, [role=button], input:not([type=hidden]), select, textarea, summary',
     shots: raw.shots,
     signIn: raw.signIn,
+    allowNonGet: raw.allowNonGet || [],
     resolve,
   };
 }
@@ -60,10 +61,41 @@ function urlFor(config, route, lang) {
   return url.toString();
 }
 
-// A context at one viewport, theme and language. Touch and mobile emulation apply below 800px.
+// Read-only by construction: pages load and read normally, but any other request is answered here and never reaches
+// the server. Without this, a page that saves on load (a "mark as read" call, an analytics beacon) would change data
+// every time a probe or capture opened it.
+const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
+const blocked = new Map();
+
+async function blockWrites(context, config) {
+  const allow = (config.allowNonGet || []).map(pattern => new RegExp(pattern));
+  const origin = new URL(config.baseUrl).origin;
+  await context.route('**/*', async route => {
+    const request = route.request();
+    if (SAFE_METHODS.has(request.method()) || allow.some(re => re.test(request.url()))) return route.fallback();
+    const url = new URL(request.url());
+    const key = `${request.method()} ${url.origin === origin ? '' : url.origin}${url.pathname}`;
+    blocked.set(key, (blocked.get(key) || 0) + 1);
+    // A form submission (a navigation) is stopped. A background request gets an empty success, so the page doesn't
+    // show an error state that a judge would then report as a bug.
+    if (request.resourceType() === 'document') return route.abort('blockedbyclient');
+    return route.fulfill({ status: 200, contentType: 'application/json', body: '{}' });
+  });
+}
+
+// One line for the end of a script's output: what the pages tried to change.
+function blockedSummary() {
+  if (!blocked.size) return 'no data-changing requests';
+  const total = [...blocked.values()].reduce((sum, count) => sum + count, 0);
+  const list = [...blocked].map(([key, count]) => (count > 1 ? `${key} (×${count})` : key));
+  return `blocked ${total} data-changing request${total === 1 ? '' : 's'}: ${list.slice(0, 8).join(', ')}${list.length > 8 ? ', …' : ''}`;
+}
+
+// A context at one viewport, theme and language. Touch and mobile emulation apply below 800px. Service workers are
+// blocked, so every request passes through the write blocker.
 async function openContext(browser, config, { viewport, theme, lang, signedIn = true }) {
   const touch = viewport.width < 800;
-  const options = { viewport, deviceScaleFactor: 1, isMobile: touch, hasTouch: touch };
+  const options = { viewport, deviceScaleFactor: 1, isMobile: touch, hasTouch: touch, serviceWorkers: 'block' };
   if (signedIn && config.storageState && fs.existsSync(config.storageState)) options.storageState = config.storageState;
   if (lang && config.language.method === 'header') options.extraHTTPHeaders = { 'Accept-Language': lang };
   if (theme && config.theme.method === 'colorScheme') options.colorScheme = theme;
@@ -87,6 +119,8 @@ async function openContext(browser, config, { viewport, theme, lang, signedIn = 
       return route.fulfill({ response, body });
     });
   }
+  // Registered last, so it runs first; allowed requests fall through to the theme rewrite above.
+  await blockWrites(context, config);
   return context;
 }
 
@@ -121,4 +155,4 @@ function options(argv) {
 
 const list = (value, fallback) => (typeof value === 'string' ? value.split(',').map(s => s.trim()).filter(Boolean) : fallback);
 
-module.exports = { loadConfig, launch, openContext, load, urlFor, options, list, trialCss, DEFAULT_VIEWPORTS, DEFAULT_WIDTHS };
+module.exports = { loadConfig, launch, openContext, load, urlFor, options, list, trialCss, blockedSummary, DEFAULT_VIEWPORTS, DEFAULT_WIDTHS };

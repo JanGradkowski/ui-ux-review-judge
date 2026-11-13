@@ -15,10 +15,11 @@ const SCRIPTS = path.join(ROOT, 'skills', 'ui-ux-review-judge', 'scripts');
 const FIXTURES = path.join(__dirname, 'fixtures');
 const OUT = path.join(__dirname, '.out');
 const PYTHON = process.env.PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
-const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css' };
+const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript' };
 
 let server;
 let baseUrl;
+const writes = []; // every request other than GET or HEAD that reached the server
 
 function run(command, args) {
   return new Promise(resolve => {
@@ -52,6 +53,11 @@ before(async () => {
   fs.mkdirSync(OUT, { recursive: true });
   server = http.createServer((request, response) => {
     const url = new URL(request.url, 'http://localhost');
+    if (request.method !== 'GET' && request.method !== 'HEAD') {
+      writes.push(`${request.method} ${url.pathname}`);
+      response.writeHead(204);
+      return response.end();
+    }
     if (url.pathname === '/private') { response.writeHead(302, { Location: '/login' }); return response.end(); }
     const file = url.pathname === '/login' ? 'clean.html' : url.pathname.slice(1);
     const full = path.join(FIXTURES, path.normalize(file));
@@ -110,6 +116,34 @@ test('tap probe catches a covered control and a tiny one', async () => {
   assert.equal(result.code, 2, result.out);
   assert.match(result.out, /misses: .*"Covered"/);
   assert.match(result.out, /under 24px: .*"×" 16×16/);
+});
+
+test('scripts never let a page change data, and say what they blocked', async () => {
+  writes.length = 0;
+  const file = config('saves', { pages: ['/saves-on-load.html'], shots: [{ name: 'saves', path: '/saves-on-load.html' }] });
+  const probe = await node('collision-probe.cjs', file, '--widths', '390,1280', '--langs', 'en');
+  const tap = await node('tap-probe.cjs', file, '--widths', '390', '--langs', 'en');
+  const capture = await node('capture.cjs', file, path.join(OUT, 'saves-shots'), '--viewports', 'mobile', '--langs', 'en');
+  assert.deepEqual(writes, [], 'requests that reached the server');
+  for (const result of [probe, tap, capture]) {
+    assert.match(result.out, /blocked \d+ data-changing requests: .*POST \/api\/items\/1\/read/, result.out);
+    assert.match(result.out, /PATCH \/api\/settings/, result.out);
+  }
+  assert.equal(probe.code, 0, probe.out);
+});
+
+test('allowNonGet lets a named read-only endpoint through', async () => {
+  writes.length = 0;
+  const file = config('allow', { pages: ['/saves-on-load.html'], allowNonGet: ['/api/items/\\d+/read$'] });
+  const result = await node('collision-probe.cjs', file, '--widths', '390', '--langs', 'en');
+  assert.ok(writes.includes('POST /api/items/1/read'), writes.join(', '));
+  assert.ok(!writes.includes('PATCH /api/settings'), writes.join(', '));
+  assert.doesNotMatch(result.out, /POST \/api\/items\/1\/read/);
+});
+
+test('a page that changes nothing reports no blocked requests', async () => {
+  const result = await node('collision-probe.cjs', config('quiet', { pages: ['/clean.html'] }), '--widths', '390', '--langs', 'en');
+  assert.match(result.out, /no data-changing requests/);
 });
 
 test('probes stop when the session has expired', async () => {

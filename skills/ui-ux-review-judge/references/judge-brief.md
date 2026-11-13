@@ -66,6 +66,7 @@ Rules for live checks:
 - Never sign in. If you see the sign-in page, stop live checks and say so.
 - Never click anything that changes data or settings.
 - No POST, PUT, PATCH or DELETE. Don't edit any project files.
+- Some pages save on load, for example marking an item read. In every script, block data-changing requests before loading any page: `await context.route('**/*', r => ['GET', 'HEAD', 'OPTIONS'].includes(r.request().method()) ? r.fallback() : r.fulfill({ status: 200, contentType: 'application/json', body: '{}' }));`
 - Visually hidden screen-reader text is clipped on purpose. Don't count it as truncation.
 
 ## The previous review raised these (optional; check each one, then look for anything new)
