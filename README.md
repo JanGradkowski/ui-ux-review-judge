@@ -94,7 +94,7 @@ On the first run in a project, Claude:
 
 1. sets up a review server and a signed-in session;
 2. writes `review.config.json` for the scripts;
-3. saves what it learned to `.claude/ui-ux-review-judge.md` in your project, so the next loop starts in minutes.
+3. saves what it learned to `.claude/ui-ux-review-judge.md` in your project, so the next loop starts in minutes. To keep those notes out of version control, it uses `.claude/ui-ux-review-judge.local.md` instead.
 
 ## Safety
 
