@@ -3,7 +3,7 @@
 // (WCAG 2.2 target size), except links inside running text.
 // usage: node tap-probe.cjs <review.config.json> [--pages /a,/b] [--langs en,pl] [--widths 360,390,820,1180,1440]
 //        [--css "<rule>" | --css trial.css]   (try a fix without editing files or restarting the server)
-const { loadConfig, launch, openContext, load, options, list, trialCss } = require('./lib.cjs');
+const { loadConfig, launch, openContext, load, options, list, trialCss, blockedSummary } = require('./lib.cjs');
 
 const args = options(process.argv.slice(2));
 const config = loadConfig(args._[0]);
@@ -52,6 +52,7 @@ const widths = list(args.widths, ['360', '390', '820', '1180', '1440']).map(Numb
     await context.close();
   }
   await browser.close();
+  console.log(blockedSummary());
   console.log(bad ? `${bad} problems` : 'no problems');
   process.exitCode = bad ? 2 : 0;
 })().catch(error => { console.error(error.message || error); process.exit(1); });

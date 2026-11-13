@@ -8,7 +8,14 @@ Pick the browser with `browser`:
 - Add `"channel": "msedge"` or `"channel": "chrome"` to use an installed Edge or Chrome instead. This helps where security software blocks Playwright's bundled browsers.
 - `"engine": "webkit"` and `"engine": "firefox"` work too.
 
-Every script is read-only except `sign-in.cjs`.
+Every script except `sign-in.cjs` is read-only by construction:
+
+- Pages load and read normally.
+- Any request other than GET, HEAD or OPTIONS is answered locally and never reaches the server. A background request gets an empty success (`200 {}`), so the page doesn't show an error a judge would report as a bug. A form submission is stopped.
+- Service workers are blocked, so no request can go around the blocker.
+- Each script ends with one line: `no data-changing requests`, or `blocked N data-changing requests: POST /api/…`.
+
+If a page reads data with POST (a GraphQL query endpoint, say), add that URL's pattern to `allowNonGet`. Only do this for endpoints that can't change anything: a GraphQL endpoint usually takes mutations too.
 
 | Script | What it does | Exit code |
 |---|---|---|
@@ -73,6 +80,7 @@ Relative paths resolve from the config's own folder. Only `baseUrl` is required.
 | `tapScope` | `body` |
 | `tapSelector` | links, buttons, `[role=button]`, inputs, selects, textareas, summaries |
 | `shots` | one full-page shot per entry in `pages` |
+| `allowNonGet` | none: every non-GET request is blocked |
 
 The credentials file is a plain `key=value` properties file. Keep it out of version control, for example by naming it `*.local.properties` and ignoring that pattern.
 
@@ -112,6 +120,7 @@ Both scripts print what they checked (`24 scopes`, `32 controls`). A count of 0 
 
 ## Gotchas
 
+- **Pages that save on load:** detail pages often mark an item read when they open. The scripts block that; a probe you write yourself must block it too (see the line in `judge-brief.md`).
 - **Content-hash asset caching:** if the server serves CSS and JS under hashed URLs and caches them, restart it after editing them. Otherwise the probes measure the old styles.
 - **Smooth scrolling:** a page with `scroll-behavior: smooth` moves elements between `scrollIntoView` and the hit test. The tap probe scrolls with `behavior: 'instant'` for this reason. Do the same in any probe you write.
 - **Visually hidden text** for screen readers is clipped on purpose. Add its class to `ignoreSelector` if it isn't one of `.visually-hidden`, `.sr-only` or `.screen-reader-text`.

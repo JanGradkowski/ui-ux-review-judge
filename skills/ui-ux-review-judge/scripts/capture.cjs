@@ -6,7 +6,7 @@
 // and sticky parts sit where a reader sees them. Writes index-<lang>.txt and prints any console errors.
 const fs = require('node:fs');
 const path = require('node:path');
-const { loadConfig, launch, openContext, load, options, list, trialCss } = require('./lib.cjs');
+const { loadConfig, launch, openContext, load, options, list, trialCss, blockedSummary } = require('./lib.cjs');
 
 const args = options(process.argv.slice(2));
 const config = loadConfig(args._[0]);
@@ -92,5 +92,6 @@ async function runSteps(page, steps = []) {
     total += files.length;
   }
   console.log(`${total} images in ${out}`);
+  console.log(blockedSummary());
   console.log(errors.length ? `console errors:\n${errors.join('\n')}` : 'no console errors');
 })().catch(error => { console.error(error.message || error); process.exit(1); });

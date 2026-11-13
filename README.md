@@ -101,6 +101,7 @@ On the first run in a project, Claude:
 The judge runs against a signed-in session, so it is kept on a short leash:
 
 - **Read-only judge.** It may only load pages and do client-side things: focus, hover, keyboard, and opening disclosures. It never signs in, submits forms, sends POST, PUT, PATCH or DELETE requests, or edits project files.
+- **Scripts that can't write.** The capture script and probes let pages load and read normally, but answer every other request locally, so it never reaches your server. A page that marks an item read when it opens, or sends a beacon, changes nothing, and each script lists what it blocked. The judge's own scripts are told to block the same way.
 - **Verified, not trusted.** `verify_judge.py` checks the judge's transcript for writes outside its own folder, and for anything that looks like sign-in, form submission, non-GET requests, git, database or package operations.
 - **Local sign-in only.** `sign-in.cjs` signs in only to local or `.test` hosts, unless you allow a named test environment. It reads a test account from a local properties file and never prints the values.
 - **Review database.** The skill asks for a seeded copy or a separate schema, never a shared database.
